@@ -11,15 +11,23 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import abstractfactory.BaseBullet;
+import abstractfactory.BaseExplode;
+import abstractfactory.BaseTank;
+import abstractfactory.DefaultFactory;
+import abstractfactory.GameFactory;
+
 public class TankFrame extends Frame {
 
 	public static final int GAME_WIDTH = Integer.parseInt((String)PropertyMgr.get("gameWidth"));
 	public static final int GAME_HEIGHT = Integer.parseInt((String)PropertyMgr.get("gameHeight"));
 	
 	Tank myTank = new Tank(200, 400, Dir.DOWN, Group.GOOD, this);
-	List<Bullet> bullets = new ArrayList<>();
-	List<Tank> tanks = new ArrayList<>();
-	List<Explode> explodes = new ArrayList<>();
+	public List<BaseBullet> bullets = new ArrayList<>();
+	public List<BaseTank> tanks = new ArrayList<>();
+	public List<BaseExplode> explodes = new ArrayList<>();
+	
+	public GameFactory gf = new DefaultFactory();
 	
 	public TankFrame() {
 		setSize(GAME_WIDTH, GAME_HEIGHT);

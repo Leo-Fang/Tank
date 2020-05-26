@@ -2,7 +2,9 @@ package tank;
 
 import java.awt.Graphics;
 
-public class Explode {
+import abstractfactory.BaseExplode;
+
+public class Explode extends BaseExplode {
 
 	private  int x, y;
 	
@@ -18,8 +20,10 @@ public class Explode {
 		this.y = y;
 		this.tf = tf;
 		
+//		new Thread(()->new Audio("audio/explode.wav").loop()).start();
 	}
 
+	@Override
 	public void paint(Graphics g) {
 		g.drawImage(ResourceMgr.explodes[step++], x, y, null);
 		if(step >= ResourceMgr.explodes.length)

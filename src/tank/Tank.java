@@ -1,10 +1,11 @@
 package tank;
 
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.util.Random;
 
-public class Tank {
+import abstractfactory.BaseTank;
+
+public class Tank extends BaseTank {
 
 	int x, y;
 	Dir dir = Dir.DOWN;
@@ -15,23 +16,12 @@ public class Tank {
 	
 	private boolean moving = true;//Tank移动或停止的判断标志
 	private boolean living = true;//Tanks寿命的判断标志
-	
-	Group group = Group.BAD;
-	
+		
 	TankFrame tf = null;
-	Rectangle rect = new Rectangle();
 	
 	private Random random = new Random();
 	
 	FireStrategy fs;
-	
-	public Group getGroup() {
-		return group;
-	}
-
-	public void setGroup(Group group) {
-		this.group = group;
-	}
 
 	public int getX() {
 		return x;
@@ -168,9 +158,20 @@ public class Tank {
 	}
 
 	public void fire() {
-		fs.fire(this);
+//		fs.fire(this);
+		int bX = this.x + Tank.WIDTH/2 -Bullet.WIDTH/2;
+		int bY = this.y + Tank.HEIGHT/2 - Bullet.HEIGHT/2;
+		
+		Dir[] dirs = Dir.values();
+		for (Dir dir : dirs) {
+			tf.gf.creatBullet(bX, bY, dir, group, tf);			
+		}
+		
+//		if(t.group == Group.GOOD)
+//			new Thread(()->new Audio("audio/tank_fire.wav").loop()).start();
 	}
 
+	@Override
 	public void die() {
 		this.living = false;
 	}

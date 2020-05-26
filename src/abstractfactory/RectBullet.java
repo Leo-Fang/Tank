@@ -1,26 +1,42 @@
-package tank;
+package abstractfactory;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
-import abstractfactory.BaseBullet;
-import abstractfactory.BaseTank;
+import tank.Dir;
+import tank.Explode;
+import tank.Group;
+import tank.PropertyMgr;
+import tank.ResourceMgr;
+import tank.Tank;
+import tank.TankFrame;
 
-public class Bullet extends BaseBullet {
+public class RectBullet extends BaseBullet {
 
 	private static final int SPEED = Integer.parseInt((String)PropertyMgr.get("bulletSpeed"));
-	private int x, y;
-	private Dir dir;
 	public static int WIDTH = ResourceMgr.bulletD.getWidth();
 	public static int HEIGHT = ResourceMgr.bulletD.getHeight();
 	
-	Rectangle rect = new Rectangle();
-	
-	private boolean living = true;//定义子弹寿命
-	TankFrame tf = null;
+	private int x,y;
+	private Dir dir;
 	private Group group = Group.BAD;
 	
-	public Bullet(int x, int y, Dir dir, Group group, TankFrame tf) {
+	Rectangle rect = new Rectangle();
+	
+	public Group getGroup() {
+		return group;
+	}
+
+	public void setGroup(Group group) {
+		this.group = group;
+	}
+
+	private boolean living = true;//定义子弹的寿命
+	TankFrame tf = null;
+	
+	public RectBullet(int x, int y, Dir dir, Group group, TankFrame tf) {
+		super();
 		this.x = x;
 		this.y = y;
 		this.dir = dir;
@@ -33,41 +49,23 @@ public class Bullet extends BaseBullet {
 		rect.height = HEIGHT;
 		
 		tf.bullets.add(this);
+		
 	}
 	
-	public Group getGroup() {
-		return group;
-	}
-
-	public void setGroup(Group group) {
-		this.group = group;
-	}
-
-	@Override
-	public void paint(Graphics g) {
-		if(!living)
+	public void paint(Graphics g) { 
+		if(!living) {
 			tf.bullets.remove(this);
-		
-		switch(dir){
-		case LEFT:
-			g.drawImage(ResourceMgr.bulletL, x, y, null);
-			break;
-		case RIGHT:
-			g.drawImage(ResourceMgr.bulletR, x, y, null);
-			break;
-		case UP:
-			g.drawImage(ResourceMgr.bulletU, x, y, null);
-			break;
-		case DOWN:
-			g.drawImage(ResourceMgr.bulletD, x, y, null);
-			break;
 		}
 		
+		Color c = g.getColor();
+		g.setColor(Color.WHITE);
+		g.fillRect(x, y, 20, 20);
+		g.setColor(c);
 		move();
 	}
 
 	private void move() {
-		switch(dir) {
+		switch(dir){
 		case LEFT:
 			x -= SPEED;
 			break;
@@ -80,10 +78,8 @@ public class Bullet extends BaseBullet {
 		case DOWN:
 			y += SPEED;
 			break;
-		default:
-			break;
 		}
-		//update rect
+		
 		rect.x = this.x;
 		rect.y = this.y;
 		
@@ -91,22 +87,21 @@ public class Bullet extends BaseBullet {
 			living = false;
 	}
 
-	@Override
 	public void collideWith(BaseTank tank) {
 		if(this.group == tank.getGroup())
 			return;
-
-		if(rect.intersects(tank.rect)){
+		
+		if(rect.intersects(tank.rect)) {
 			tank.die();
 			this.die();
 			int eX = tank.getX() + Tank.WIDTH/2 -Explode.WIDTH/2;
 			int eY = tank.getY() + Tank.HEIGHT/2 - Explode.HEIGHT/2;
 			tf.explodes.add(tf.gf.creatExplode(eX, eY, tf));
 		}
+		
 	}
 
-	private void die() {
+	public void die() {
 		this.living = false;
 	}
-	
 }
