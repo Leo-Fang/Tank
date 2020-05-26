@@ -16,7 +16,7 @@ public class Main {
 		
 		//每隔50ms刷新一次Frame
 		while(true) {
-			Thread.sleep(50);
+			Thread.sleep(25);
 			tf.repaint();
 		}
 		
