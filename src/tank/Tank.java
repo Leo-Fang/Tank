@@ -4,67 +4,29 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.util.Random;
 
-public class Tank {
+import tank.strategy.FireStrategy;
 
-	int x, y;
-	Dir dir = Dir.DOWN;
-	private static final int SPEED = Integer.parseInt((String)PropertyMgr.get("tankSpeed"));
-	
-	public static final int WIDTH = ResourceMgr.goodTankU.getWidth();
+public class Tank extends GameObject {
+
 	public static final int HEIGHT = ResourceMgr.goodTankU.getHeight();
+	private static final int SPEED = Integer.parseInt((String)PropertyMgr.get("tankSpeed"));
+	public static final int WIDTH = ResourceMgr.goodTankU.getWidth();
 	
-	private boolean moving = true;//Tank移动或停止的判断标志
+	public Dir dir = Dir.DOWN;
+	FireStrategy fs;
+	
+	public GameModel gm;
+	public Group group = Group.BAD;
+	
 	private boolean living = true;//Tanks寿命的判断标志
 	
-	Group group = Group.BAD;
-	
-	Rectangle rect = new Rectangle();
+	private boolean moving = true;//Tank移动或停止的判断标志
 	
 	private Random random = new Random();
+
+	Rectangle rect = new Rectangle();
 	
-	FireStrategy fs;
-	GameModel gm;
-	
-	public Group getGroup() {
-		return group;
-	}
-
-	public void setGroup(Group group) {
-		this.group = group;
-	}
-
-	public int getX() {
-		return x;
-	}
-
-	public void setX(int x) {
-		this.x = x;
-	}
-
-	public int getY() {
-		return y;
-	}
-
-	public void setY(int y) {
-		this.y = y;
-	}
-
-	public boolean isMoving() {
-		return moving;
-	}
-
-	public void setMoving(boolean moving) {
-		this.moving = moving;
-	}
-
-	public Dir getDir() {
-		return dir;
-	}
-
-	public void setDir(Dir dir) {
-		this.dir = dir;
-	}
-	
+	public int x, y;
 	public Tank(int x, int y, Dir dir, Group group, GameModel gm) {
 		super();
 		this.x = x;
@@ -95,29 +57,48 @@ public class Tank {
 		}		
 		
 	}
+	
+	private void boundsCheck() {
+		if(this.x < 2)
+			this.x = 2;
+		if(this.x > TankFrame.GAME_WIDTH - Tank.WIDTH - 2)
+			this.x = TankFrame.GAME_WIDTH - Tank.WIDTH - 2;
+		if(this.y < 32)
+			this.y = 32;
+		if(this.y > TankFrame.GAME_HEIGHT - Tank.HEIGHT - 2)
+			this.y = TankFrame.GAME_HEIGHT - Tank.HEIGHT - 2;
+	}
 
-	//把换坦克的方法定义到Tank类中
-	public void paint(Graphics g) {
-		if(!living)
-//			return;
-			gm.tanks.remove(this);//Tank死后需要从List中移除
-		
-		switch(dir){
-		case LEFT:
-			g.drawImage(this.group==Group.GOOD?ResourceMgr.goodTankL:ResourceMgr.badTankL, x, y, null);
-			break;
-		case RIGHT:
-			g.drawImage(this.group==Group.GOOD?ResourceMgr.goodTankR:ResourceMgr.badTankR, x, y, null);
-			break;
-		case UP:
-			g.drawImage(this.group==Group.GOOD?ResourceMgr.goodTankU:ResourceMgr.badTankU, x, y, null);
-			break;
-		case DOWN:
-			g.drawImage(this.group==Group.GOOD?ResourceMgr.goodTankD:ResourceMgr.badTankD, x, y, null);
-			break;
-		}
-		
-		move();
+	public void die() {
+		this.living = false;
+	}
+
+	public void fire() {
+		fs.fire(this);
+	}
+
+	public Dir getDir() {
+		return dir;
+	}
+
+	public Group getGroup() {
+		return group;
+	}
+
+	public Rectangle getRect() {
+		return rect;
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public boolean isMoving() {
+		return moving;
 	}
 
 	private void move() {
@@ -151,28 +132,57 @@ public class Tank {
 		rect.x = this.x;
 		rect.y = this.y;
 	}
+	
+	//把换坦克的方法定义到Tank类中
+	public void paint(Graphics g) {
+		if(!living)
+//			return;
+			gm.remove(this);//Tank死后需要从List中移除
+		
+		switch(dir){
+		case LEFT:
+			g.drawImage(this.group==Group.GOOD?ResourceMgr.goodTankL:ResourceMgr.badTankL, x, y, null);
+			break;
+		case RIGHT:
+			g.drawImage(this.group==Group.GOOD?ResourceMgr.goodTankR:ResourceMgr.badTankR, x, y, null);
+			break;
+		case UP:
+			g.drawImage(this.group==Group.GOOD?ResourceMgr.goodTankU:ResourceMgr.badTankU, x, y, null);
+			break;
+		case DOWN:
+			g.drawImage(this.group==Group.GOOD?ResourceMgr.goodTankD:ResourceMgr.badTankD, x, y, null);
+			break;
+		}
+		
+		move();
+	}
 
 	private void randomDir() {
 		this.dir = Dir.values()[random.nextInt(4)];
 	}
+
+	public void setDir(Dir dir) {
+		this.dir = dir;
+	}
+
+	public void setGroup(Group group) {
+		this.group = group;
+	}
 	
-	private void boundsCheck() {
-		if(this.x < 2)
-			this.x = 2;
-		if(this.x > TankFrame.GAME_WIDTH - Tank.WIDTH - 2)
-			this.x = TankFrame.GAME_WIDTH - Tank.WIDTH - 2;
-		if(this.y < 32)
-			this.y = 32;
-		if(this.y > TankFrame.GAME_HEIGHT - Tank.HEIGHT - 2)
-			this.y = TankFrame.GAME_HEIGHT - Tank.HEIGHT - 2;
+	public void setMoving(boolean moving) {
+		this.moving = moving;
 	}
 
-	public void fire() {
-		fs.fire(this);
+	public void setX(int x) {
+		this.x = x;
 	}
 
-	public void die() {
-		this.living = false;
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	public void stop() {
+		moving = false;
 	}
 	
 }

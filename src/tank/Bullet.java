@@ -3,7 +3,7 @@ package tank;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
-public class Bullet {
+public class Bullet extends GameObject {
 
 	private static final int SPEED = Integer.parseInt((String)PropertyMgr.get("bulletSpeed"));
 	private int x, y;
@@ -29,7 +29,7 @@ public class Bullet {
 		rect.width = WIDTH;
 		rect.height = HEIGHT;
 		
-		gm.bullets.add(this);
+		gm.add(this);
 	}
 	
 	public Group getGroup() {
@@ -42,7 +42,7 @@ public class Bullet {
 
 	public void paint(Graphics g) {
 		if(!living)
-			gm.bullets.remove(this);
+			gm.remove(this);
 		
 		switch(dir){
 		case LEFT:
@@ -87,17 +87,20 @@ public class Bullet {
 			living = false;
 	}
 
-	public void collideWith(Tank tank) {
+	public boolean collideWith(Tank tank) {
 		if(this.group == tank.getGroup())
-			return;
+			return false;
 
 		if(rect.intersects(tank.rect)){
 			tank.die();
 			this.die();
 			int eX = tank.getX() + Tank.WIDTH/2 -Explode.WIDTH/2;
 			int eY = tank.getY() + Tank.HEIGHT/2 - Explode.HEIGHT/2;
-			gm.explodes.add(new Explode(eX, eY, gm));
+			gm.add(new Explode(eX, eY, gm));
+			return true;
 		}
+		
+		return false;
 	}
 
 	private void die() {
