@@ -18,12 +18,12 @@ public class Tank {
 	
 	Group group = Group.BAD;
 	
-	TankFrame tf = null;
 	Rectangle rect = new Rectangle();
 	
 	private Random random = new Random();
 	
 	FireStrategy fs;
+	GameModel gm;
 	
 	public Group getGroup() {
 		return group;
@@ -65,13 +65,13 @@ public class Tank {
 		this.dir = dir;
 	}
 	
-	public Tank(int x, int y, Dir dir, Group group, TankFrame tf) {
+	public Tank(int x, int y, Dir dir, Group group, GameModel gm) {
 		super();
 		this.x = x;
 		this.y = y;
 		this.dir = dir;
 		this.group = group;
-		this.tf = tf;
+		this.gm = gm;
 		
 		rect.x = this.x;
 		rect.y = this.y;
@@ -100,7 +100,7 @@ public class Tank {
 	public void paint(Graphics g) {
 		if(!living)
 //			return;
-			tf.tanks.remove(this);//Tank死后需要从List中移除
+			gm.tanks.remove(this);//Tank死后需要从List中移除
 		
 		switch(dir){
 		case LEFT:
