@@ -2,8 +2,13 @@ package tank;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
+import tank.observer.TankFireEvent;
+import tank.observer.TankFireHandler;
+import tank.observer.TankFireObserver;
 import tank.strategy.FireStrategy;
 
 public class Tank extends GameObject {
@@ -203,6 +208,14 @@ public class Tank extends GameObject {
 	@Override
 	public int getHeight() {		
 		return HEIGHT;	
+	}
+	
+	private List<TankFireObserver> fireObservers = Arrays.asList(new TankFireHandler());
+	public void handleFireKey() {
+		TankFireEvent event = new TankFireEvent(this);
+		for (TankFireObserver o : fireObservers) {
+			o.actionOnFire(event);
+		}
 	}
 	
 }
