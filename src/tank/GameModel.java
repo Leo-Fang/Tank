@@ -9,7 +9,12 @@ import tank.cor.ColliderChain;
 
 public class GameModel {
 
-	Tank myTank = new Tank(200, 400, Dir.DOWN, Group.GOOD, this);
+	private static final GameModel INSTANCE = new GameModel();
+	static {
+		INSTANCE.init();
+	}
+
+	Tank myTank;
 //	List<Bullet> bullets = new ArrayList<>();
 //	List<Tank> tanks = new ArrayList<>();
 //	List<Explode> explodes = new ArrayList<>();
@@ -18,13 +23,23 @@ public class GameModel {
 	
 	ColliderChain chain = new ColliderChain();
 	
-	public GameModel(){
+	private GameModel() {}
+	private void init(){
+		//初始化主站坦克
+		myTank = new Tank(200, 400, Dir.DOWN, Group.GOOD);
+		
 		int initTankCount = Integer.parseInt((String) PropertyMgr.get("initTankCount"));
 		
 		//初始化地方坦克
 		for (int i = 0; i < initTankCount; i++) {
-			add(new Tank(10+i*80, 200, Dir.DOWN, Group.BAD, this));
+			add(new Tank(10+i*80, 200, Dir.DOWN, Group.BAD));
 		}
+		
+		//初始化墙
+		add(new Wall(150, 150, 200, 50));
+		add(new Wall(550, 150, 200, 50));
+		add(new Wall(300, 300, 50, 200));
+		add(new Wall(550, 300, 50, 200));
 	}
 	
 	public void add(GameObject go) {
@@ -44,7 +59,7 @@ public class GameModel {
 		g.setColor(c);
 		
 		myTank.paint(g);
-		//画子弹
+
 		for (int i = 0; i < objects.size(); i++) {
 			objects.get(i).paint(g);
 		}
@@ -68,6 +83,10 @@ public class GameModel {
 
 	public Tank getMainTank() {
 		return myTank;	
+	}
+
+	public static GameModel getInstance() {
+		return INSTANCE;		
 	}
 
 }

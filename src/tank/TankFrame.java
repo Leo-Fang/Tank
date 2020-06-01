@@ -11,7 +11,7 @@ import java.awt.event.WindowEvent;
 
 public class TankFrame extends Frame {
 
-	GameModel gm = new GameModel();
+	GameModel gm = GameModel.getInstance();
 	
 	public static final int GAME_WIDTH = Integer.parseInt((String)PropertyMgr.get("gameWidth"));
 	public static final int GAME_HEIGHT = Integer.parseInt((String)PropertyMgr.get("gameHeight"));

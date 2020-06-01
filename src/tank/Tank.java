@@ -15,7 +15,6 @@ public class Tank extends GameObject {
 	public Dir dir = Dir.DOWN;
 	FireStrategy fs;
 	
-	public GameModel gm;
 	public Group group = Group.BAD;
 	
 	private boolean living = true;//Tanks寿命的判断标志
@@ -24,16 +23,17 @@ public class Tank extends GameObject {
 	
 	private Random random = new Random();
 
-	Rectangle rect = new Rectangle();
+	public Rectangle rect = new Rectangle();
 	
 	public int x, y;
-	public Tank(int x, int y, Dir dir, Group group, GameModel gm) {
+	int oldX, oldY;//记录上一步的位置
+	
+	public Tank(int x, int y, Dir dir, Group group) {
 		super();
 		this.x = x;
 		this.y = y;
 		this.dir = dir;
 		this.group = group;
-		this.gm = gm;
 		
 		rect.x = this.x;
 		rect.y = this.y;
@@ -54,7 +54,9 @@ public class Tank extends GameObject {
 			} catch (Exception e) {				
 				e.printStackTrace();
 			}
-		}		
+		}
+		
+//		GameModel.getInstance().add(this);
 		
 	}
 	
@@ -102,6 +104,10 @@ public class Tank extends GameObject {
 	}
 
 	private void move() {
+		//记录移动之前的位置
+		oldX = x;
+		oldY = y;
+		
 		if(!moving)
 			return;
 		
@@ -137,7 +143,7 @@ public class Tank extends GameObject {
 	public void paint(Graphics g) {
 		if(!living)
 //			return;
-			gm.remove(this);//Tank死后需要从List中移除
+			GameModel.getInstance().remove(this);//Tank死后需要从List中移除
 		
 		switch(dir){
 		case LEFT:
@@ -183,6 +189,11 @@ public class Tank extends GameObject {
 
 	public void stop() {
 		moving = false;
+	}
+	
+	public void back() {
+		x = oldX;
+		y = oldY;
 	}
 	
 }

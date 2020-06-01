@@ -11,25 +11,23 @@ public class Bullet extends GameObject {
 	public static int WIDTH = ResourceMgr.bulletD.getWidth();
 	public static int HEIGHT = ResourceMgr.bulletD.getHeight();
 	
-	Rectangle rect = new Rectangle();
+	public Rectangle rect = new Rectangle();
 	
 	private boolean living = true;//¶¨Òå×Óµ¯ÊÙÃü
-	GameModel gm = null;
-	private Group group = Group.BAD;
+	public Group group = Group.BAD;
 	
-	public Bullet(int x, int y, Dir dir, Group group, GameModel gm) {
+	public Bullet(int x, int y, Dir dir, Group group) {
 		this.x = x;
 		this.y = y;
 		this.dir = dir;
 		this.group = group;
-		this.gm = gm;
 		
 		rect.x = this.x;
 		rect.y = this.y;
 		rect.width = WIDTH;
 		rect.height = HEIGHT;
 		
-		gm.add(this);
+		GameModel.getInstance().add(this);
 	}
 	
 	public Group getGroup() {
@@ -42,7 +40,7 @@ public class Bullet extends GameObject {
 
 	public void paint(Graphics g) {
 		if(!living)
-			gm.remove(this);
+			GameModel.getInstance().remove(this);
 		
 		switch(dir){
 		case LEFT:
@@ -87,23 +85,23 @@ public class Bullet extends GameObject {
 			living = false;
 	}
 
-	public boolean collideWith(Tank tank) {
-		if(this.group == tank.getGroup())
-			return false;
+//	public boolean collideWith(Tank tank) {
+//		if(this.group == tank.getGroup())
+//			return false;
+//
+//		if(rect.intersects(tank.rect)){
+//			tank.die();
+//			this.die();
+//			int eX = tank.getX() + Tank.WIDTH/2 -Explode.WIDTH/2;
+//			int eY = tank.getY() + Tank.HEIGHT/2 - Explode.HEIGHT/2;
+//			gm.add(new Explode(eX, eY, gm));
+//			return true;
+//		}
+//		
+//		return false;
+//	}
 
-		if(rect.intersects(tank.rect)){
-			tank.die();
-			this.die();
-			int eX = tank.getX() + Tank.WIDTH/2 -Explode.WIDTH/2;
-			int eY = tank.getY() + Tank.HEIGHT/2 - Explode.HEIGHT/2;
-			gm.add(new Explode(eX, eY, gm));
-			return true;
-		}
-		
-		return false;
-	}
-
-	private void die() {
+	public void die() {
 		this.living = false;
 	}
 	
