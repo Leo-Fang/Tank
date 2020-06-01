@@ -6,7 +6,6 @@ import java.awt.Rectangle;
 public class Bullet extends GameObject {
 
 	private static final int SPEED = Integer.parseInt((String)PropertyMgr.get("bulletSpeed"));
-	private int x, y;
 	private Dir dir;
 	public static int WIDTH = ResourceMgr.bulletD.getWidth();
 	public static int HEIGHT = ResourceMgr.bulletD.getHeight();
@@ -103,6 +102,16 @@ public class Bullet extends GameObject {
 
 	public void die() {
 		this.living = false;
+	}
+
+	@Override
+	public int getWidth() {		
+		return WIDTH;	
+	}
+
+	@Override
+	public int getHeight() {		
+		return HEIGHT;	
 	}
 	
 }

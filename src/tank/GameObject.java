@@ -4,7 +4,11 @@ import java.awt.Graphics;
 
 public abstract class GameObject {
 	
-	int x, y;
+	public int x, y;
+	
+	public abstract int getWidth();
+	public abstract int getHeight();
+	
 	public abstract void paint(Graphics g);
 	
 }

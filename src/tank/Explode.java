@@ -3,8 +3,6 @@ package tank;
 import java.awt.Graphics;
 
 public class Explode extends GameObject {
-
-	private  int x, y;
 	
 	public static int WIDTH = ResourceMgr.explodes[0].getWidth();
 	public static int HEIGHT = ResourceMgr.explodes[0].getHeight();
@@ -26,4 +24,13 @@ public class Explode extends GameObject {
 			GameModel.getInstance().remove(this);
 	}
 	
+	@Override
+	public int getWidth() {		
+		return WIDTH;	
+	}
+
+	@Override
+	public int getHeight() {		
+		return HEIGHT;	
+	}
 }

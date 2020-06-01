@@ -25,7 +25,6 @@ public class Tank extends GameObject {
 
 	public Rectangle rect = new Rectangle();
 	
-	public int x, y;
 	int oldX, oldY;//记录上一步的位置
 	
 	public Tank(int x, int y, Dir dir, Group group) {
@@ -194,6 +193,16 @@ public class Tank extends GameObject {
 	public void back() {
 		x = oldX;
 		y = oldY;
+	}
+
+	@Override
+	public int getWidth() {		
+		return WIDTH;	
+	}
+
+	@Override
+	public int getHeight() {		
+		return HEIGHT;	
 	}
 	
 }
