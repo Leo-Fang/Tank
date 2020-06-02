@@ -107,11 +107,13 @@ public class GameModel {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {		
-			try {
-				oos.close();
-			} catch (IOException e) {			
-				e.printStackTrace();
+		} finally {	
+			if(oos != null) {			
+				try {
+					oos.close();
+				} catch (IOException e) {			
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -130,11 +132,13 @@ public class GameModel {
 		} catch (ClassNotFoundException e) {			
 			e.printStackTrace();
 		} finally {
-			try {
-				ois.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}			
+			if(ois != null) {				
+				try {
+					ois.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}			
+			}
 		}		
 	}
 
